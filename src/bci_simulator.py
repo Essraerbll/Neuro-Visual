@@ -1,4 +1,5 @@
 """
+...
 BCI Simülatör Modülü
 Gerçek EEG verileri gelene kadar, kullanıcının seçimini simüle eder
 İleriye dönük: Gerçek EEG sinyallerinden P300/SSVEP özelliklerini çıkarmak için hazır
