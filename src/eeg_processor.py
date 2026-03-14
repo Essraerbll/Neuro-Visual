@@ -280,7 +280,9 @@ def load_edf_signal(edf_path: str) -> Tuple[np.ndarray, int]:
     Requires `mne`. Install with: `pip install mne`.
     """
     try:
-        import mne
+        import importlib
+
+        mne = importlib.import_module("mne")
     except ImportError as exc:
         raise ImportError("EDF support requires mne. Install with `pip install mne`.") from exc
 
