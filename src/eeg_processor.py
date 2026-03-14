@@ -193,6 +193,9 @@ class EEGClassifier:
             raise ValueError("X must be 2D feature matrix")
         if len(X) != len(y):
             raise ValueError("X and y length mismatch")
+        n_classes = len(np.unique(y))
+        if len(X) <= n_classes:
+            raise ValueError("Number of samples must be greater than number of classes")
         self.model.fit(X, y)
         self.is_fitted = True
 
@@ -214,8 +217,11 @@ class EEGClassifier:
         if folds < 2:
             return 0.0
 
-        scores = cross_val_score(self.model, X, y, cv=folds)
-        return float(np.mean(scores))
+        try:
+            scores = cross_val_score(self.model, X, y, cv=folds)
+            return float(np.mean(scores))
+        except ValueError:
+            return 0.0
 
 
 def load_csv_trials(
@@ -416,12 +422,15 @@ def run_file_workflow(
         clf = EEGClassifier()
         cv_folds = min(5, len(labels))
         cv_acc = clf.score_cv(X, labels, folds=cv_folds)
-        clf.fit(X, labels)
-        pred_preview = clf.predict(X[: min(5, len(X))])
+        n_classes = len(np.unique(labels))
+        pred_preview = []
+        if len(labels) > n_classes:
+            clf.fit(X, labels)
+            pred_preview = clf.predict(X[: min(5, len(X))]).tolist()
         print(f"Labels shape: {labels.shape}")
         print(f"Classes: {np.unique(labels).tolist()}")
         print(f"Cross-val accuracy: {cv_acc:.3f}")
-        print(f"Preview preds: {pred_preview.tolist()}")
+        print(f"Preview preds: {pred_preview}")
     else:
         print("Labels not suitable for classification. Feature extraction completed.")
 

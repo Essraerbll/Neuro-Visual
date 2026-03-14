@@ -92,6 +92,13 @@ cd src
 python eeg_processor.py
 ```
 
+Gerçek EEG dosyasından (CSV trial formatı) çalıştırma:
+
+```bash
+cd src
+python eeg_processor.py --input ..\data\sample_eeg\demo_trials.csv --input-format csv --sampling-rate 250
+```
+
 ### 5. EEG Veri Kaynaklarını Listele
 
 ```bash
