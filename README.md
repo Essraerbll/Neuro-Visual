@@ -48,7 +48,8 @@ Neuro-Visual/
 │   ├── main_demo.py          # Ana demo (Kamera + Seçim)
 │   ├── camera_vision.py      # Nesne algılama modülü
 │   ├── bci_simulator.py      # BCI simülatörü (Gerçek EEG yerine)
-│   └── eeg_processor.py      # (Gelecek) EEG işleme pipeline
+│   ├── eeg_processor.py      # EEG işleme + özellik çıkarımı + baseline sınıflandırıcı
+│   └── eeg_dataset_helper.py # EEG veri seti keşfi/katalog scripti
 ├── data/
 │   └── sample_eeg/           # (Gelecek) Örnek EEG veri setleri
 ├── models/
@@ -82,6 +83,21 @@ pip install -r requirements.txt
 ```bash
 cd src
 python main_demo.py
+```
+
+### 4. EEG İşleme Testi
+
+```bash
+cd src
+python eeg_processor.py
+```
+
+### 5. EEG Veri Kaynaklarını Listele
+
+```bash
+cd src
+python eeg_dataset_helper.py --list
+python eeg_dataset_helper.py --export-json ..\data\eeg_dataset_catalog.json
 ```
 
 ---
@@ -172,8 +188,9 @@ c tuşuna basıldı
 
 ### Faz 2: Gerçek EEG Entegrasyonu (YAKINDA)
 - [ ] Gerçek EEG başlığı bağlantısı (OpenBCI, g.tec, vb.)
-- [ ] MATLAB / MNE-Python ile sinyal işleme
-- [ ] P300 algılama
+- [x] Python ile temel sinyal işleme pipeline (bandpass/notch/epoch/feature)
+- [ ] MATLAB / MNE-Python ile ileri sinyal işleme
+- [ ] Gerçek veride P300 algılama doğrulaması
 
 ### Faz 3: ML Sınıflandırması (SONRA)
 - [ ] Training data topla

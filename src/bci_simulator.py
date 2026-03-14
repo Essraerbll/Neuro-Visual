@@ -7,8 +7,6 @@ Gerçek EEG verileri gelene kadar, kullanıcının seçimini simüle eder
 
 import numpy as np
 from typing import Optional
-import threading
-import time
 
 
 class BCISimulator:
@@ -102,31 +100,6 @@ class BCIDataGenerator:
     def get_sample(self) -> np.ndarray:
         """Bir örnek EEG veri parçası döndür"""
         return self.eeg_data
-
-
-# Gerçek EEG İşleme Pipeline (İleriye Dönük)
-class EEGProcessor:
-    """
-    EEG sinyalini işleme sınıfı
-    Filtre, artifact removal, feature extraction...
-    """
-    
-    @staticmethod
-    def bandpass_filter(signal, low_freq=0.1, high_freq=50, sampling_rate=250):
-        """Bant geçişi filtresi uygula (gürültü temizleme)"""
-        # Basit implementasyon; scipy.signal.butter kullanılabilir
-        return signal
-    
-    @staticmethod
-    def extract_features(signal) -> dict:
-        """EEG sinyalinden özellik çıkar"""
-        features = {
-            'mean': np.mean(signal),
-            'std': np.std(signal),
-            'max': np.max(signal),
-            'min': np.min(signal),
-        }
-        return features
 
 
 if __name__ == "__main__":

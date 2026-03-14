@@ -1,0 +1,20 @@
+[
+  {
+    "name": "PhysioNet EEG Motor Movement/Imagery",
+    "type": "EEG",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "notes": "Baseline EEG benchmark dataset with multiple tasks."
+  },
+  {
+    "name": "BCI Competition (official archive)",
+    "type": "EEG/BCI",
+    "url": "http://www.bbci.de/competition/",
+    "notes": "Classic BCI challenge datasets, useful for model baselines."
+  },
+  {
+    "name": "OpenNeuro",
+    "type": "EEG/MEG/fMRI",
+    "url": "https://openneuro.org/",
+    "notes": "Large open repository; many EEG studies include event markers."
+  }
+]
