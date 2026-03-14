@@ -52,7 +52,7 @@ class EEGProcessor:
         low = low_freq / nyquist
         high = high_freq / nyquist
         b, a = butter(order, [low, high], btype="band")
-        return filtfilt(b, a, signal, axis=-1)
+        return self._safe_filtfilt(b, a, signal)
 
     def notch_filter(
         self,
@@ -63,7 +63,7 @@ class EEGProcessor:
         """Remove powerline artifact using notch filter."""
         w0 = freq / (0.5 * self.sampling_rate)
         b, a = iirnotch(w0=w0, Q=quality_factor)
-        return filtfilt(b, a, signal, axis=-1)
+        return self._safe_filtfilt(b, a, signal)
 
     def preprocess(
         self,
@@ -163,6 +163,23 @@ class EEGProcessor:
             return 0.0
         return float(np.trapz(psd[mask], freqs[mask]))
 
+    @staticmethod
+    def _safe_filtfilt(b: np.ndarray, a: np.ndarray, signal: np.ndarray) -> np.ndarray:
+        """Apply filtfilt only when signal length is long enough.
+
+        For very short windows, return signal unchanged to avoid scipy pad errors.
+        """
+        if signal.ndim == 1:
+            n_samples = signal.shape[0]
+        else:
+            n_samples = signal.shape[-1]
+
+        padlen = 3 * max(len(a), len(b))
+        if n_samples <= padlen:
+            return signal
+
+        return filtfilt(b, a, signal, axis=-1)
+
 
 class EEGClassifier:
     """Baseline classifier wrapper for quick P300/SSVEP experiments."""
@@ -185,10 +202,18 @@ class EEGClassifier:
         return self.model.predict(X)
 
     def score_cv(self, X: np.ndarray, y: np.ndarray, folds: int = 5) -> float:
-        if len(X) < folds:
-            folds = max(2, len(X))
+        if len(X) < 2:
+            return 0.0
+
+        _, counts = np.unique(y, return_counts=True)
+        if len(counts) < 2:
+            return 0.0
+
+        max_valid_folds = int(min(np.min(counts), len(X)))
+        folds = min(folds, max_valid_folds)
         if folds < 2:
             return 0.0
+
         scores = cross_val_score(self.model, X, y, cv=folds)
         return float(np.mean(scores))
 
