@@ -1,5 +1,5 @@
 """
-
+....
 ...
 BCI Simülatör Modülü
 Gerçek EEG verileri gelene kadar, kullanıcının seçimini simüle eder
